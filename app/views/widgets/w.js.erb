@@ -1,0 +1,18 @@
+<%= render partial: 'jsonp.js' %>
+JSONP.init({
+  callbackName: 'callback'
+});
+(function () {
+  window.BTSW = window.BTSW || {};
+  window.BTSW.referrer = "<%= cookies[:_referrer_] %>";
+  (function (BTSW, window, undefined_) {
+    BTSW.action = function (name, value) {
+      JSONP.get('<%= @jsonp_url %>/action.js', {name: name, value: value}, function (response) {
+        console.log(response);
+      });
+    }
+    BTSW.current_user = function (callback) {
+      JSONP.get('<%= @jsonp_url %>/get_current_user.js', null, callback);
+    }
+  })(BTSW, window);
+}).call(this);

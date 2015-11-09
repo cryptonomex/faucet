@@ -1,0 +1,4 @@
+host: your_server_name_or_ip
+user: bts
+repository: git@github.com:cryptonomex/faucet.git
+branch: master
