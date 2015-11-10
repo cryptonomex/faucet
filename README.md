@@ -1,5 +1,3 @@
-== README
-
 # Installation
 
 ## Build toolkit and cli_wallet
@@ -11,7 +9,7 @@ I recommend to launch 4 witness nodes for redundancy, find shell script example 
 This faucet software requires persistent connection to one instance of cli_wallet - it's used to register accounts, start it with the following command:
 ```
 screen -S cli
-./programs/cli_wallet/cli_wallet -r 127.0.0.1:8091 -s ws://127.0.0.1:9090
+./programs/cli_wallet/cli_wallet -r 127.0.0.1:8099 -s ws://127.0.0.1:8090
 ```
 
 _please note - screen command is used to help it to run in the background_

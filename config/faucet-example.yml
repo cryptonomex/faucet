@@ -1,4 +1,4 @@
-cli_wallet_connection: ws://localhost:8091
+cli_wallet_connection: ws://localhost:8099
 registrar_account: your_faucet_account
 referrer_percent: 50
 refcode_prefix: F01
