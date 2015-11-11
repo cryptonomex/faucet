@@ -6,4 +6,4 @@
 config/secrets.yml
 config/faucet.yml
 config/deploy.yml
-public/wallet
+public/wallet*

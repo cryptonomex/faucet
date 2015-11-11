@@ -56,3 +56,5 @@ gem 'mina', require: false
 gem 'mina-rsync', require: false
 gem 'omniauth'
 gem 'mandrill-api'
+gem 'browser'
+
