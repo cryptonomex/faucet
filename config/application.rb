@@ -26,7 +26,6 @@ module Faucet
         # Do not swallow errors in after_commit/after_rollback callbacks.
         config.active_record.raise_in_transactional_callbacks = true
 
-
         config.action_mailer.default_url_options = {host: FAUCETCONF.default_url, port: FAUCETCONF.default_port}
         config.action_mailer.delivery_method = :smtp
         config.action_mailer.perform_deliveries = true

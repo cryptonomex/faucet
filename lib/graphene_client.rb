@@ -172,6 +172,7 @@ class GrapheneClient
                     EM.stop
                 end
             end
+            break unless Rails.env.production?
             ExceptionNotifier.notify_exception(LostConnection.new, :data => {connection: @ws_server}) if reconnect_attempts == 0
             reconnect_attempts += 1
             sleep 10

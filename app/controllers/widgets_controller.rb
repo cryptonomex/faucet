@@ -45,6 +45,7 @@ class WidgetsController < ApplicationController
     private
 
     def sanitize_str(str)
+        return '' if str.blank?
         str = str.length() > 252 ? str[0..252] : str
         return str if str =~ /\A[\w\s\d\-\_\.]*\z/
         ActiveRecord::Base::sanitize(str)

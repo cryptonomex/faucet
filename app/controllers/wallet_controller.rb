@@ -5,7 +5,7 @@ class WalletController < ApplicationController
 
     def index
         browser = Browser.new(ua: request.user_agent)
-        @win_32 = browser.windows?
+        @platform = browser.windows? ? 'win32' : browser.platform
         render layout: false
     end
 

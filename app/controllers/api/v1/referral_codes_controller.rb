@@ -20,7 +20,7 @@ module Api
                 render json: {}, status: :unauthorized
             end
 
-            def creat
+            def create
                 render json: {}, status: :unauthorized
             end
 
