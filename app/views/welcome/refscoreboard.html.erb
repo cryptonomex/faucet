@@ -1,0 +1,12 @@
+<div class="row">
+  <div class="col-md-6">
+    <br/>
+    <form class="form-horizontal">
+      <div class="form-group">
+        <label>Select interval</label>
+        <%= select_tag 'date_filter', options_for_select(BtsAccount::DATE_SCOPES, 'All'), data: {url: refscoreboard_path}, class: 'form-control' %>
+      </div>
+    </form>
+    <%= render 'refs' %>
+  </div>
+</div>

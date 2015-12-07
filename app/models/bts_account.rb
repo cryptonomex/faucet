@@ -17,10 +17,9 @@ class BtsAccount < ActiveRecord::Base
 
   scope :grouped_by_referrers, -> { select([:referrer, 'count(*) as count']).group(:referrer).order('count desc') }
 
-  def self.filter(scope_name)
-    return self if scope_name == 'All' || !scope_name.in?(DATE_SCOPES)
-
-    date = case scope_name
+    def self.dates_range(scope_name)
+        return nil if scope_name == 'All' || !scope_name.in?(DATE_SCOPES)
+        case scope_name
              when 'Today'
                Date.today.beginning_of_day..Date.today.end_of_day
              when 'Yesterday'
@@ -34,7 +33,6 @@ class BtsAccount < ActiveRecord::Base
              when 'Last month'
                1.month.ago.at_beginning_of_month..1.month.ago.at_end_of_month
            end
-    self.where(created_at: date)
   end
 
   private

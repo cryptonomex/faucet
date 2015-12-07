@@ -11,8 +11,8 @@ JSONP.init({
         console.log(response);
       });
     }
-    BTSW.current_user = function (callback) {
-      JSONP.get('<%= @jsonp_url %>/get_current_user.js', null, callback);
-    }
+//    BTSW.current_user = function (callback) {
+//      JSONP.get('<%= @jsonp_url %>/get_current_user.js', null, callback);
+//    }
   })(BTSW, window);
 }).call(this);

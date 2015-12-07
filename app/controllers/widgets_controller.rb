@@ -32,15 +32,15 @@ class WidgetsController < ApplicationController
         render :json => response.to_json, :callback => params['callback']
     end
 
-    def get_current_user
-        response.headers['Content-type'] = 'text/javascript; charset=utf-8'
-        #logger.debug "get_current_user:::::: #{current_user}"
-        if current_user
-            render :json => {id: current_user.id, name: current_user.name}.to_json, :callback => params['callback']
-        else
-            render :json => false, :callback => params['callback']
-        end
-    end
+    # def get_current_user
+    #     response.headers['Content-type'] = 'text/javascript; charset=utf-8'
+    #     #logger.debug "get_current_user:::::: #{current_user}"
+    #     if current_user
+    #         render :json => {id: current_user.id, name: current_user.name}.to_json, :callback => params['callback']
+    #     else
+    #         render :json => false, :callback => params['callback']
+    #     end
+    # end
 
     private
 
@@ -52,7 +52,7 @@ class WidgetsController < ApplicationController
     end
 
     def sanitize_sparam(sp, len=nil)
-        return nil if not (sp and sp.length > 0)
+        return '' if not (sp and sp.length > 0)
         if len
             sanitize_str(sp[0][0..(len-1)])
         else

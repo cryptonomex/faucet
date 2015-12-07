@@ -1,11 +1,12 @@
 Rails.application.routes.draw do
 
     root 'wallet#index'
+    get '/refscoreboard', to: 'welcome#refscoreboard'
 
     resources :widgets do
         get 'w'
         get 'action'
-        get 'get_current_user'
+        #get 'get_current_user'
     end
 
     namespace :api do

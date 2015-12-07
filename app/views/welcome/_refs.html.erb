@@ -1,0 +1,25 @@
+<table class="table table-striped">
+  <thead>
+    <th>Referrer</th>
+    <th>Accounts</th>
+    <th>%</th>
+  </thead>
+  <% @refs.each do |r| %>
+    <tr>
+      <td>
+        <%= r.referrer ? r.referrer : '[no ref]' %>
+      </td>
+      <td>
+        <%= r.count %>
+      </td>
+      <td>
+        <%= @total && @total > 0 ? "%.2f" % ((r.count.to_f / @total.to_f) * 100.0) : '-' %>
+      </td>
+    </tr>
+  <% end %>
+  <tr>
+    <td>TOTAL</td>
+    <td><%= @total %></td>
+    <td></td>
+  </tr>
+</table>
