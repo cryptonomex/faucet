@@ -2,7 +2,7 @@ require 'cgi'
 
 class WidgetsController < ApplicationController
     #before_action :authenticate_user!, except: [:w, :action, :get_current_user]
-    skip_before_filter :verify_authenticity_token, only: [:w, :action, :get_current_user]
+    skip_before_filter :verify_authenticity_token, only: [:w, :action]#, :get_current_user]
 
     def w
         response.headers['Content-type'] = 'text/javascript; charset=utf-8'
