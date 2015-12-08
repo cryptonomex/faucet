@@ -1,4 +1,4 @@
-require Rails.root.join('lib/graphene_client.rb').to_s
+require Rails.root.join('lib/graphene/client.rb').to_s
 
 class GrapheneCli
     include Singleton
