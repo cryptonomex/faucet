@@ -46,24 +46,18 @@ end
 #     msg.scan(/../).collect { |c| c.to_i(16).chr }.join
 # end
 
-def hexlify(s)
+def hexlify(ba)
     a = []
-    s.each_byte do |b|
+    ba.each do |b|
         a << sprintf('%02X', b)
     end
-    a.join
+    a.join('').downcase
 end
 
 def unhexlify(s)
-    a = s.split
-    return a.pack('H*')
-end
-
-def base58decode1(base58_str)
-    res = Base58.decode(base58_str)
-    puts base58_str + " => " + res.to_s(16)
-    puts hexlify(res)
-    return res.to_s(16)
+    # a = s.split
+    # return a.pack('H*')
+    s.scan(/../).map { |c| c.to_i(16) }
 end
 
 BASE58_ALPHABET = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz".bytes
@@ -75,27 +69,42 @@ def base58decode(base58_str)
         n = n * 58 + BASE58_ALPHABET.index(b)
         leading_zeroes_count += 1 if n == 0
     end
-    res = bytearray()
-    while n >= 256:
-        div, mod = divmod(n, 256)
-        res.insert(0, mod)
+    res = []
+    while n >= 256 do
+        div, mod = n.divmod 256
+        res.unshift mod
         n = div
-    else:
-        res.insert(0, n)
-    print(res)
-    print(bytearray(1))
-    print(bytearray(1)*leading_zeroes_count + res)
-    res = hexlify(bytearray(1)*leading_zeroes_count + res).decode('ascii')
-    print(base58_str + " => " + res)
+    end
+    res.unshift n
+    res = hexlify([0]*leading_zeroes_count + res)
+    #puts base58_str + " => " + res
     return res
 end
 
 def base58encode(hexstring)
-    Base58.encode(hexstring)
+    byteseq = unhexlify(hexstring)
+    n = 0
+    leading_zeroes_count = 0
+    byteseq.each do |c|
+        n = n * 256 + c
+        leading_zeroes_count += 1 if n == 0
+    end
+    res = []
+    while n >= 58
+        div, mod = n.divmod 58
+        res.unshift BASE58_ALPHABET[mod]
+        n = div
+    end
+    res.unshift BASE58_ALPHABET[n]
+    res = (BASE58_ALPHABET[0..1] * leading_zeroes_count + res).map(&:chr).join
+    #puts hexstring + " => " + res
+    return res
 end
 
 def ripemd160(s)
-    Digest::RMD160.digest unhexlify s
+    digest = Digest::RMD160.new
+    digest.update s
+    digest.digest
 end
 
 def doublesha256(s)
@@ -128,6 +137,7 @@ def base58CheckDecode(s)
     return dec[2..-1]
 end
 
+# *****
 def btsBase58CheckEncode(s)
     checksum = ripemd160(s)[0..4]
     result = s + hexlify(checksum)
@@ -153,25 +163,25 @@ class Testcases < Minitest::Test
                 '80f3a375e00cc5147f30bee97bb5d54b31a12eee148a1ac31ac9edc4ecd13bc1f80cc8148e'])
     end
 
-    # def test_base58encode
-    #     assert_equal(['5HueCGU8rMjxEXxiPuD5BDku4MkFqeZyd4dZ1jvhTVqvbTLvyTJ',
-    #             '5KYZdUEo39z3FPrtuX2QbbwGnNP5zTd7yyr2SC1j299sBCnWjss',
-    #             '5KfazyjBBtR2YeHjNqX5D6MXvqTUd2iZmWusrdDSUqoykTyWQZB'],
-    #         [base58encode('800c28fca386c7a227600b2fe50b7cae11ec86d3bf1fbe471be89827e19d72aa1d507a5b8d'),
-    #             base58encode('80e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b8555c5bbb26'),
-    #             base58encode('80f3a375e00cc5147f30bee97bb5d54b31a12eee148a1ac31ac9edc4ecd13bc1f80cc8148e')])
-    # end
-    #
-    # def test_btsBase58CheckEncode
-    #     assert_equal([btsBase58CheckEncode('02e649f63f8e8121345fd7f47d0d185a3ccaa843115cd2e9392dcd9b82263bc680'),
-    #             btsBase58CheckEncode('021c7359cd885c0e319924d97e3980206ad64387aff54908241125b3a88b55ca16'),
-    #             btsBase58CheckEncode('02f561e0b57a552df3fa1df2d87a906b7a9fc33a83d5d15fa68a644ecb0806b49a'),
-    #             btsBase58CheckEncode('03e7595c3e6b58f907bee951dc29796f3757307e700ecf3d09307a0cc4a564eba3'),],
-    #         ['6dumtt9swxCqwdPZBGXh9YmHoEjFFnNfwHaTqRbQTghGAY2gRz',
-    #             '5725vivYpuFWbeyTifZ5KevnHyqXCi5hwHbNU9cYz1FHbFXCxX',
-    #             '6kZKHSuxqAwdCYsMvwTcipoTsNE2jmEUNBQufGYywpniBKXWZK',
-    #             '8b82mpnH8YX1E9RHnU2a2YgLTZ8ooevEGP9N15c1yFqhoBvJur'])
-    # end
+    def test_base58encode
+        assert_equal(['5HueCGU8rMjxEXxiPuD5BDku4MkFqeZyd4dZ1jvhTVqvbTLvyTJ',
+                '5KYZdUEo39z3FPrtuX2QbbwGnNP5zTd7yyr2SC1j299sBCnWjss',
+                '5KfazyjBBtR2YeHjNqX5D6MXvqTUd2iZmWusrdDSUqoykTyWQZB'],
+            [base58encode('800c28fca386c7a227600b2fe50b7cae11ec86d3bf1fbe471be89827e19d72aa1d507a5b8d'),
+                base58encode('80e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b8555c5bbb26'),
+                base58encode('80f3a375e00cc5147f30bee97bb5d54b31a12eee148a1ac31ac9edc4ecd13bc1f80cc8148e')])
+    end
+
+    def test_btsBase58CheckEncode
+        assert_equal([btsBase58CheckEncode('02e649f63f8e8121345fd7f47d0d185a3ccaa843115cd2e9392dcd9b82263bc680'),
+                btsBase58CheckEncode('021c7359cd885c0e319924d97e3980206ad64387aff54908241125b3a88b55ca16'),
+                btsBase58CheckEncode('02f561e0b57a552df3fa1df2d87a906b7a9fc33a83d5d15fa68a644ecb0806b49a'),
+                btsBase58CheckEncode('03e7595c3e6b58f907bee951dc29796f3757307e700ecf3d09307a0cc4a564eba3'),],
+            ['6dumtt9swxCqwdPZBGXh9YmHoEjFFnNfwHaTqRbQTghGAY2gRz',
+                '5725vivYpuFWbeyTifZ5KevnHyqXCi5hwHbNU9cYz1FHbFXCxX',
+                '6kZKHSuxqAwdCYsMvwTcipoTsNE2jmEUNBQufGYywpniBKXWZK',
+                '8b82mpnH8YX1E9RHnU2a2YgLTZ8ooevEGP9N15c1yFqhoBvJur'])
+    end
     #
     # def test_btsBase58CheckDecode
     #     assert_equal(['02e649f63f8e8121345fd7f47d0d185a3ccaa843115cd2e9392dcd9b82263bc680',
