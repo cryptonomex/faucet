@@ -49,7 +49,7 @@ class AccountRegistrator
         end
 
         res = {}
-        result, error = GrapheneCli.instance.exec('register_account', [account_name, owner_key, active_key, Rails.application.config.faucet.registrar_account, referrer_account, referrer_percent * 100, true])
+        result, error = GrapheneCli.instance.exec('register_account', [account_name, owner_key, active_key, Rails.application.config.faucet.registrar_account, referrer_account, referrer_percent, true])
         if error
             @logger.error("!!! register_account error: #{error.inspect}")
             res[:error] = error
