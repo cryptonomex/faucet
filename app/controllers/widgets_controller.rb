@@ -23,7 +23,7 @@ class WidgetsController < ApplicationController
         logger.info "==> widget[#{w.id}]: action '#{params[:name]}'='#{params[:value]}' from '#{request.referer}'"
         uri = get_uri_and_check_domain(w, request.referer)
         if uri
-            qpms = CGI::parse(uri.query)
+            qpms = uri.query ? CGI::parse(uri.query) : nil
             action = create_user_action(w, qpms, request, params[:name], params[:value])
             response = action.id
         else
