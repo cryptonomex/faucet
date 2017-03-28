@@ -44,7 +44,7 @@ class BtsAccount < ActiveRecord::Base
         referral_code = ReferralCode.where(code: self.refcode).first
         referrer = referral_code.funded_by if referral_code
     end
-    result = AccountRegistrator.new(nil, logger).register(self.name, self.active_key, self.owner_key, self.memo_key, referrer)
+    result = AccountRegistrator.new(nil, logger).register(self.name, self.owner_key, self.active_key, self.memo_key, referrer)
     if result[:error]
       errors.add(:base, result[:error]['message'] ? result[:error]['message'] : 'unknown backend error')
       return false
